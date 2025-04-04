@@ -1,7 +1,7 @@
 websockets~=15.0.1
 python-dotenv~=1.1.0
 httpx~=0.28.1
-
+signnow-smolagents~=0.1.4
 smolagents~=1.13.0
 fastapi~=0.115.12
 pydantic~=2.11.1
