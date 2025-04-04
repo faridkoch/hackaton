@@ -5,17 +5,17 @@ from dotenv import load_dotenv
 
 from sn_smolagent_tools_demo import (
     SignNowSmolagentsCodeAgent,
-    access_token_from_login_password
+    access_token_from_login_password, SignNowSmolagentsToolCallingAgent
 )
 from smolagents.monitoring import AgentLogger
 from smolagents.memory import AgentError, TaskStep
 
 
-AGENTS: Dict[str, SignNowSmolagentsCodeAgent] = {}
+AGENTS: Dict[str, SignNowSmolagentsToolCallingAgent] = {}
 ACCESS_TOKEN_CACHE = None
 MEMORY_DIR = "agent_memory"
 params=load_dotenv('.env')
-print(params)
+
 def ensure_memory_dir():
     if not os.path.exists(MEMORY_DIR):
         os.makedirs(MEMORY_DIR)
@@ -26,7 +26,7 @@ def memory_file_path(chat_id: str) -> str:
     return os.path.join(MEMORY_DIR, f"{chat_id}.pkl")
 
 
-def get_agent(chat_id: str) -> SignNowSmolagentsCodeAgent:
+def get_agent(chat_id: str) -> SignNowSmolagentsToolCallingAgent:
     global ACCESS_TOKEN_CACHE
 
     if chat_id not in AGENTS:
@@ -37,7 +37,7 @@ def get_agent(chat_id: str) -> SignNowSmolagentsCodeAgent:
                 os.environ.get("SIGNNOW_BASIC_AUTH")
             )
 
-        agent = SignNowSmolagentsCodeAgent(
+        agent = SignNowSmolagentsToolCallingAgent(
             access_token=ACCESS_TOKEN_CACHE,
             model=agent_model(),
             planning_interval=10,
@@ -60,13 +60,13 @@ def agent_model():
     )
 
 
-def save_memory(agent: SignNowSmolagentsCodeAgent, chat_id: str):
+def save_memory(agent: SignNowSmolagentsToolCallingAgent, chat_id: str):
     path = memory_file_path(chat_id)
     with open(path, "wb") as f:
         pickle.dump(agent.memory, f)
 
 
-def load_memory(agent: SignNowSmolagentsCodeAgent, chat_id: str):
+def load_memory(agent: SignNowSmolagentsToolCallingAgent, chat_id: str):
     path = memory_file_path(chat_id)
     if not os.path.exists(path):
         print(f"🆕 No memory for chat_id: {chat_id}")

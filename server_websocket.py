@@ -97,7 +97,7 @@ async def handle_client(websocket):
 
 async def main():
     async with websockets.serve(handle_client, "0.0.0.0", 8765, ping_interval=None, ping_timeout=None, max_size=2**20):
-        print("✅ WebSocket server started on ws://localhost:8765")
+        print("✅ WebSocket server started on ws://"+os.environ.get("DOMAIN")+":8765")
         await asyncio.Future()
 
 

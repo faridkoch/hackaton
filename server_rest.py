@@ -3,8 +3,10 @@ from pydantic import BaseModel
 from typing import List
 from agent_manager import get_agent
 from smolagents.memory import ActionStep, PlanningStep, FinalAnswerStep
+from dotenv import load_dotenv
 import uvicorn
 import json
+import os
 
 app = FastAPI(
     title="Stateless AI Agent REST API",
@@ -53,5 +55,6 @@ def normalize_content(content):
         return {"message": str(content)}
 
 if __name__ == "__main__":
-    print("🚀 Starting REST server on http://localhost:8001")
+    load_dotenv('.env')
+    print("🚀 Starting REST server on http://" + os.environ.get("DOMAIN") + ":8001")
     uvicorn.run("server_rest:app", host="0.0.0.0", port=8001, reload=False)
