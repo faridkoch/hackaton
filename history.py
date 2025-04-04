@@ -41,10 +41,11 @@ def get_history(chat_id: str) -> List[Dict]:
         rows = cursor.fetchall()
     return [
         {
-            "role": role,
-            "content": content,
+            "type": role,
+            "message": content,
             "message_id": message_id,
             "step_type": step_type,
+
             "timestamp": timestamp,
         }
         for role, content, message_id, step_type, timestamp in rows

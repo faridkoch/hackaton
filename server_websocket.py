@@ -18,7 +18,7 @@ def generate_random_string(length=10):
 async def start_agent(task, websocket, chat_id):
     agent = get_agent(chat_id)
     print(task)
-    save_message(chat_id, "user", task, message_id=generate_random_string(), step_type="user_message")
+    save_message(chat_id, "client", task, message_id=generate_random_string(), step_type="user_message")
     stream = agent.run(task=task, stream=True, reset=False)
     message_id = generate_random_string()
 
@@ -49,12 +49,15 @@ async def start_agent(task, websocket, chat_id):
                                                                                                     "final_answer",
                                                                                                     None)
             if content:
-                save_message(chat_id, "agent", content, message_id, step_type=type(step).__name__)
+                save_message(chat_id, "agent_step", content, message_id, step_type=type(step).__name__)
+
+        save_message(chat_id, "message_end", "", message_id, step_type=type(step).__name__)
         await websocket.send(json.dumps({
             "type": "message_end",
             "message_id": message_id,
             "chat_id": chat_id,
         }))
+
 
     except Exception as e:
         await websocket.send(json.dumps({
