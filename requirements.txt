@@ -4,3 +4,5 @@ httpx~=0.28.1
 smolagents @ git+https://github.com/huggingface/smolagents.git
 
 smolagents~=1.13.0
+fastapi~=0.115.12
+pydantic~=2.11.1

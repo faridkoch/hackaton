@@ -176,3 +176,68 @@ GET /history/{chat_id}
 
 > Useful for showing full chat log in chronological order.
 
+---
+
+## 🚀 Stateless REST API
+
+You can run the AI agent in a stateless mode via a synchronous REST endpoint. This does not use or store any memory — it simply returns the reasoning steps and final result for a given task.
+
+### 🔗 Endpoint
+
+```
+POST /agent/run
+```
+
+### 📥 Request Body
+
+```json
+{
+  "chat_id": "chat_id47",
+  "task": "get all contacts"
+}
+```
+
+| Field     | Type    | Description                              |
+|-----------|---------|------------------------------------------|
+| chat_id   | ?string | Identifier for the session, not required |
+| task      | string  | Instruction for the AI agent             |
+
+### 📤 Response
+
+Returns a list of reasoning steps in order:
+
+```json
+[
+  {
+    "step_type": "PlanningStep",
+    "content": "I will call the tool to get contacts..."
+  },
+  {
+    "step_type": "ActionStep",
+    "content": "Execution logs:\n[{'email': ...}]"
+  },
+  {
+    "step_type": "FinalAnswerStep",
+    "content": "[{'name': ..., 'email': ...}]"
+  }
+]
+```
+
+---
+
+### ▶️ Running the server
+
+You can run it directly with Python:
+
+```bash
+python server_rest.py
+```
+
+It will start on:
+
+```
+http://localhost:8001
+```
+
+> This mode is useful for quick demo requests, stateless integrations, or calling the agent without tracking user history.
+
