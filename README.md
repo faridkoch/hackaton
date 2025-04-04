@@ -99,7 +99,7 @@ The agent replies with a **stream of step messages**, each representing an inter
 
 | `step_type`        | Suggested UI Display                      |
 |--------------------|-------------------------------------------|
-| `PlanningStep`     | 💡 Plan or internal reasoning              | 
+| `PlanningStep`     | 💡 Plan or internal reasoning              |
 | `ActionStep`       | ⚙️ Execution logs, tool usage              |
 | `FinalAnswerStep`  | ✅ Final output to be shown to the user    |
 | `message_end`      | 🟢 Hide spinner / input lock               |
@@ -125,3 +125,54 @@ The agent replies with a **stream of step messages**, each representing an inter
 - `message_end` — signals completion
 
 ---
+
+
+
+---
+
+## 📚 Retrieving Chat History
+
+In addition to WebSocket interaction, you can retrieve the full conversation history for any `chat_id` using a REST API.
+
+### 🔗 Endpoint
+
+```
+GET /history/{chat_id}
+```
+
+- **Example:** `http://localhost:8000/history/chat_id47`
+
+### 🔁 Response Format
+
+```json
+[
+  {
+    "role": "user",
+    "content": "get all contacts",
+    "step_type": null,
+    "timestamp": "2025-04-03 20:45:12"
+  },
+  {
+    "role": "agent",
+    "content": "Execution logs...\nLast output: [...]",
+    "step_type": "ActionStep",
+    "timestamp": "2025-04-03 20:45:15"
+  },
+  {
+    "role": "agent",
+    "content": "[Final result array or message]",
+    "step_type": "FinalAnswerStep",
+    "timestamp": "2025-04-03 20:45:16"
+  }
+]
+```
+
+| Field       | Type    | Description                                      |
+|-------------|---------|--------------------------------------------------|
+| `role`      | string  | `"user"` or `"agent"`                            |
+| `content`   | string  | Message content                                  |
+| `step_type` | string  | Optional: Agent step type (`ActionStep`, etc.)  |
+| `timestamp` | string  | ISO timestamp of the message                     |
+
+> Useful for showing full chat log in chronological order.
+
